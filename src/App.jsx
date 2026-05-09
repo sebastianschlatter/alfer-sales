@@ -12,7 +12,7 @@ const BRANDS = {
   orditech: { label:"orditech®", tagline:"Stark im Detail – sicher im Ergebnis", color:"#FFC300", bg:"rgba(255,195,0,0.12)",   border:"rgba(255,195,0,0.3)"   },
   clipstech: { label:"clipstech®", tagline:"Das Finish für deinen Boden", color:"#E62D41", bg:"rgba(226,45,65,0.12)",   border:"rgba(226,45,65,0.3)"   },
   element:   { label:"element system®", tagline:"Macht Platz für dein Leben", color:"#B473FF", bg:"rgba(180,115,255,0.12)", border:"rgba(180,115,255,0.3)" },
-  coaxis:  { label:"coaxis® system", tagline:"Macht Platz für dein Leben", color:"#17E5E5", bg:"rgba(23,229,229,0.12)",  border:"rgba(23,229,229,0.3)"  },
+  coaxis:  { label:"coaxis®", tagline:"Macht Platz für dein Leben", color:"#17E5E5", bg:"rgba(23,229,229,0.12)",  border:"rgba(23,229,229,0.3)"  },
 };
 
 const STRUKTUR = {
@@ -32,7 +32,7 @@ const STRUKTUR = {
     untertitel:"B2C & B2B",
     brands:{
       element:{ label:"element system®", tagline:"Macht Platz für dein Leben", color:"#B473FF", sortimente:["Schienen & Träger","Office-Set","Pegboard","Konsolen","Möbelfüße"], image:"/sortimente/element.jpg" },
-      coaxis:{ label:"coaxis® system", tagline:"Macht Platz für dein Leben", color:"#17E5E5", sortimente:["coaxis® Profile","Zubehör","Haken-Sortiment X-Star"], image:"/sortimente/coaxis.jpg" },
+      coaxis:{ label:"coaxis®", tagline:"Macht Platz für dein Leben", color:"#17E5E5", sortimente:["coaxis® System Profile","Zubehör","Haken-Sortiment X-Star"], image:"/sortimente/coaxis.jpg" },
     }
   }
 };
