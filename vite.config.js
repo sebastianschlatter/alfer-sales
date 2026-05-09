@@ -20,7 +20,7 @@ export default defineConfig({
         start_url: '/',
         icons: [
           { src: 'alfer logo neu 192x192px.png', sizes: '192x192', type: 'image/png' },
-          { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+          { src: 'alfer Logo 512x512px.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
         ]
       },
       workbox: {
