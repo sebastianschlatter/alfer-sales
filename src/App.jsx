@@ -8,29 +8,31 @@ const AlferLogo = ({ height = 24 }) => (
 );
 
 const BRANDS = {
-  combitech: { label:"combitech®",       color:"#FF6E00", bg:"rgba(255,110,0,0.12)",   border:"rgba(255,110,0,0.3)"   },
-  clipstech: { label:"clipstech®",       color:"#E62D41", bg:"rgba(226,45,65,0.12)",   border:"rgba(226,45,65,0.3)"   },
-  orditech:  { label:"orditech®",        color:"#FFC300", bg:"rgba(255,195,0,0.12)",   border:"rgba(255,195,0,0.3)"   },
-  element:   { label:"element system®",  color:"#B473FF", bg:"rgba(180,115,255,0.12)", border:"rgba(180,115,255,0.3)" },
-  coaxis:    { label:"coaxis®",          color:"#17E5E5", bg:"rgba(23,229,229,0.12)",  border:"rgba(23,229,229,0.3)"  },
+  combitech: { label:"combitech®", tagline:"Projekt mit Profil", color:"#FF6E00", bg:"rgba(255,110,0,0.12)",   border:"rgba(255,110,0,0.3)"   },
+  buildtech: { label:"buildtech®", tagline:"Stark im Detail – sicher im Ergebnis", color:"#FFC300", bg:"rgba(255,195,0,0.12)",   border:"rgba(255,195,0,0.3)"   },
+  clipstech: { label:"clipstech®", tagline:"Das Finish für deinen Boden", color:"#E62D41", bg:"rgba(226,45,65,0.12)",   border:"rgba(226,45,65,0.3)"   },
+  element:   { label:"element system®", tagline:"Macht Platz für dein Leben", color:"#B473FF", bg:"rgba(180,115,255,0.12)", border:"rgba(180,115,255,0.3)" },
+  organize:  { label:"organize® system", tagline:"Macht Platz für dein Leben", color:"#17E5E5", bg:"rgba(23,229,229,0.12)",  border:"rgba(23,229,229,0.3)"  },
 };
 
 const STRUKTUR = {
   "Bauen & Renovieren": {
     color:"#FF6E00",
-    image:"https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=900&q=80",
+    image:"/sortimente/bereich_bauen.jpg",
+    untertitel:"B2B & B2C",
     brands:{
-      combitech:{ label:"combitech®", color:"#FF6E00", sortimente:["System-Profile | Aluminium","System-Profile | Kunststoff","Connect-Verbinder","Gewindestangen","System-Zubehör","Werkzeug-Sortiment"], image:"https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80" },
-      clipstech:{ label:"clipstech®", color:"#E62D41", sortimente:["clipstech® Basis","clipstech® Plus","clipstech® Vario","clipstech® Mini","Optifloor","Standard Parket Profile"], image:"https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80" },
-      orditech:{ label:"orditech®", color:"#FFC300", sortimente:["Heimwerker-Profile","Bleche | Aluminium","Bleche | Stahl","Bleche | Edelstahl","Design- & Kunststoffplatten","Fliesen","Dekor","Aluwork"], image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" },
+      combitech:{ label:"combitech®", tagline:"Projekt mit Profil", color:"#FF6E00", sortimente:["combitech® Profile","Connect-Verbinder","Zubehör gesamt","Logika (Logika Zub.)"], image:"/sortimente/combitech.jpg" },
+      buildtech:{ label:"buildtech®", tagline:"Stark im Detail – sicher im Ergebnis", color:"#FFC300", sortimente:["Bleche","Heimwerkerprofile","Eisenwaren (Stahl)","Fliesen","Dekor","Aluwork"], image:"/sortimente/buildtech.jpg" },
+      clipstech:{ label:"clipstech®", tagline:"Das Finish für deinen Boden", color:"#E62D41", sortimente:["clipstech® Basis","clipstech® Plus","clipstech® Vario","clipstech® Mini","Optifloor","Standard Parket Profile"], image:"/sortimente/clipstech.jpg" },
     }
   },
   "Ordnungssysteme": {
     color:"#B473FF",
-    image:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=900&q=80",
+    image:"/sortimente/bereich_ordnen.jpg",
+    untertitel:"B2C & B2B",
     brands:{
-      element:{ label:"element system®", color:"#B473FF", sortimente:["Schienen & Träger","Office-Set","Pegboard","Konsolen","Möbelfüße"], image:"https://images.unsplash.com/photo-1588854337115-1c67d9247e4d?w=800&q=80" },
-      coaxis:{ label:"coaxis®", color:"#17E5E5", sortimente:["coaxis® Profile","Zubehör","Haken-Sortiment X-Star"], image:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80" },
+      element:{ label:"element system®", tagline:"Macht Platz für dein Leben", color:"#B473FF", sortimente:["Schienen & Träger","Office-Set","Pegboard","Konsolen","Möbelfüße"], image:"/sortimente/element.jpg" },
+      organize:{ label:"organize® system", tagline:"Macht Platz für dein Leben", color:"#17E5E5", sortimente:["organize® Profile","Zubehör","Haken-Sortiment X-Star"], image:"/sortimente/organize.jpg" },
     }
   }
 };
@@ -55,13 +57,13 @@ const DEFAULT_PRODUCTS = [
   { id:"C002", name:"combitech® connect-Verbinder 23,5mm", artNr:"350.235.001", brand:"combitech", bereich:"Bauen & Renovieren", sortiment:"Connect-Verbinder", beschreibung:"Verbindet combitech Profile im 90°-Winkel. Aus hochwertigem Polyamid (PA).", vorteile:"Kraftschlüssig,Werkzeuglos montierbar,Für alle Quadratprofile,Wiederverwendbar", varianten:"1er Pack,10er Pack,50er Pack", zielgruppe:"industrie,fachhandel", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80", tags:"verbinder,connect,fitting" },
   { id:"CL001", name:"clipstech® Übergangsschiene Silber 90cm", artNr:"CL-910.090.001", brand:"clipstech", bereich:"Bauen & Renovieren", sortiment:"clipstech® Basis", beschreibung:"Nahtloser, sicherer Übergang zwischen zwei Bodenbelägen. Anti-Stolper-Profil.", vorteile:"Höhenausgleich 0–12mm,Anti-Stolper,Silber eloxiert,Selbstklebend möglich", varianten:"90cm Silber,90cm Gold,90cm Schwarz,120cm Silber", zielgruppe:"baumarkt,fachhandel", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80", tags:"boden,übergang,laminat,parkett" },
   { id:"CL002", name:"clipstech® Optifloor Abschlussschiene", artNr:"CL-920.090.002", brand:"clipstech", bereich:"Bauen & Renovieren", sortiment:"Optifloor", beschreibung:"Eleganter Wandabschluss für Laminat- und Parkettböden. Unsichtbare Clip-Befestigung.", vorteile:"Unsichtbare Befestigung,Clip-Montage,10 Dekore,Made in Germany", varianten:"Silber 90cm,Buche 90cm,Wenge 90cm,Eiche 90cm", zielgruppe:"baumarkt,fachhandel,moebelmarkt", neuheit:"ja", bildUrl:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&q=80", tags:"boden,abschluss,wand,laminat,dekor" },
-  { id:"OR001", name:"orditech® Winkel-Profil Alu 20×20mm", artNr:"OR-010.020.200", brand:"orditech", bereich:"Bauen & Renovieren", sortiment:"Heimwerker-Profile", beschreibung:"Universelles Aluminium-Winkelprofil für Heimwerker und Handwerker. Zuschneidbar.", vorteile:"Eloxiert,Zuschneidbar,Universell,Leichtgewicht", varianten:"L=1000mm,L=2000mm,L=2500mm", zielgruppe:"baumarkt,fachhandel,handelsketten", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=800&q=80", tags:"winkel,profil,alu,heimwerker" },
-  { id:"OR002", name:"orditech® Glattblech Aluminium 500×250mm", artNr:"OR-GLB.050.025", brand:"orditech", bereich:"Bauen & Renovieren", sortiment:"Bleche | Aluminium", beschreibung:"Glattes Aluminiumblech für Verkleidungen, Reparaturen und kreative Anwendungen.", vorteile:"Rein-Aluminium,Korrosionsfest,Zuschneidbar,Vielseitig", varianten:"500×250mm,1000×500mm,1000×200mm", zielgruppe:"baumarkt,fachhandel,industrie", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80", tags:"blech,alu,platte,verkleidung" },
+  { id:"OR001", name:"buildtech® Winkel-Profil Alu 20×20mm", artNr:"OR-010.020.200", brand:"buildtech", bereich:"Bauen & Renovieren", sortiment:"Heimwerker-Profile", beschreibung:"Universelles Aluminium-Winkelprofil für Heimwerker und Handwerker. Zuschneidbar.", vorteile:"Eloxiert,Zuschneidbar,Universell,Leichtgewicht", varianten:"L=1000mm,L=2000mm,L=2500mm", zielgruppe:"baumarkt,fachhandel,handelsketten", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=800&q=80", tags:"winkel,profil,alu,heimwerker" },
+  { id:"OR002", name:"buildtech® Glattblech Aluminium 500×250mm", artNr:"OR-GLB.050.025", brand:"buildtech", bereich:"Bauen & Renovieren", sortiment:"Bleche | Aluminium", beschreibung:"Glattes Aluminiumblech für Verkleidungen, Reparaturen und kreative Anwendungen.", vorteile:"Rein-Aluminium,Korrosionsfest,Zuschneidbar,Vielseitig", varianten:"500×250mm,1000×500mm,1000×200mm", zielgruppe:"baumarkt,fachhandel,industrie", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80", tags:"blech,alu,platte,verkleidung" },
   { id:"E001", name:"element system® Reling-Schiene 60cm", artNr:"ES-REL.060.SS", brand:"element", bereich:"Ordnungssysteme", sortiment:"Schienen & Träger", beschreibung:"Wandmontierte Reling-Schiene für modulare Küchenorganisation. Edelstahl-Optik.", vorteile:"Edelstahl-Optik,Hohe Tragfähigkeit,Modular erweiterbar,Inkl. Montageset", varianten:"60cm,90cm,120cm,150cm", zielgruppe:"moebelmarkt,fachhandel,baumarkt", neuheit:"ja", bildUrl:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800&q=80", tags:"reling,küche,schiene,organisation" },
   { id:"E002", name:"element system® Pegboard 50×50cm Weiß", artNr:"ES-PEG.050.050", brand:"element", bereich:"Ordnungssysteme", sortiment:"Pegboard", beschreibung:"Lochwand-System für Garage, Werkstatt und Büro. Flexibel mit Haken bestückbar.", vorteile:"Flexibel,Stabil,Lackiert weiß,Mit 10 Haken inkl.", varianten:"50×50cm Weiß,50×50cm Schwarz,100×50cm Weiß", zielgruppe:"baumarkt,industrie,fachhandel", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1588854337115-1c67d9247e4d?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&q=80", tags:"pegboard,lochplatte,garage,werkzeug" },
   { id:"E003", name:"element system® Eckregal-Set 2-bödig", artNr:"ES-ECK.002.SI", brand:"element", bereich:"Ordnungssysteme", sortiment:"Konsolen", beschreibung:"Platzsparendes Eckregal aus Aluminium. Ideal für Bad, Büro und Wohnraum.", vorteile:"Platzsparend,Alu eloxiert,15 kg Traglast,Einfache Montage", varianten:"2-bödig Silber,3-bödig Silber,2-bödig Weiß", zielgruppe:"moebelmarkt,baumarkt,handelsketten", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800&q=80", tags:"regal,ecke,bad,büro" },
-  { id:"CO001", name:"coaxis® Haken-Profil 600mm", artNr:"COA-600.001", brand:"coaxis", bereich:"Ordnungssysteme", sortiment:"coaxis® Profile", beschreibung:"Das modulare coaxis® Schienensystem für universelle Wandorganisation – Garage bis Küche.", vorteile:"Modular,Stufenlos verschiebbar,Bis 20 kg,Aluminium eloxiert", varianten:"L=600mm,L=900mm,L=1200mm", zielgruppe:"baumarkt,fachhandel,industrie", neuheit:"ja", bildUrl:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800&q=80", tags:"coaxis,schiene,organisation,garage" },
-  { id:"CO002", name:"coaxis® X-Star Haken-Set 10-teilig", artNr:"COA-XST.010", brand:"coaxis", bereich:"Ordnungssysteme", sortiment:"Haken-Sortiment X-Star", beschreibung:"Universelles Haken-Set für das coaxis® System. Für alle Profilgrößen passend.", vorteile:"10-teilig,Universell,Stahl verzinkt,Schnelle Montage", varianten:"10er Set,20er Set,Gemischtes Set", zielgruppe:"baumarkt,fachhandel", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80", tags:"haken,xstar,coaxis,zubehör" },
+  { id:"CO001", name:"organize® Haken-Profil 600mm", artNr:"COA-600.001", brand:"organize", bereich:"Ordnungssysteme", sortiment:"organize® Profile", beschreibung:"Das modulare organize® Schienensystem für universelle Wandorganisation – Garage bis Küche.", vorteile:"Modular,Stufenlos verschiebbar,Bis 20 kg,Aluminium eloxiert", varianten:"L=600mm,L=900mm,L=1200mm", zielgruppe:"baumarkt,fachhandel,industrie", neuheit:"ja", bildUrl:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800&q=80", tags:"coaxis,schiene,organisation,garage" },
+  { id:"CO002", name:"organize® X-Star Haken-Set 10-teilig", artNr:"COA-XST.010", brand:"organize", bereich:"Ordnungssysteme", sortiment:"Haken-Sortiment X-Star", beschreibung:"Universelles Haken-Set für das organize® System. Für alle Profilgrößen passend.", vorteile:"10-teilig,Universell,Stahl verzinkt,Schnelle Montage", varianten:"10er Set,20er Set,Gemischtes Set", zielgruppe:"baumarkt,fachhandel", neuheit:"nein", bildUrl:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800&q=80", anwendungUrl:"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80", tags:"haken,xstar,coaxis,zubehör" },
 ];
 
 function parseCSV(text) {
@@ -93,14 +95,14 @@ const Icon = ({ name, size=20 }) => {
 };
 
 const css = `
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#050B12;--bg2:#0A1520;--bg3:#0F1E2E;--bg4:#162638;
   --border:rgba(0,195,255,0.08);--border2:rgba(0,195,255,0.2);
   --text:#EEF6FF;--text2:#7BA8C8;--text3:#3A6078;
   --alfer:#00C3FF;--r:14px;--r2:20px;
-  --font:'DM Sans',sans-serif;--mono:'Space Mono',monospace;
+  --font:'Lexend',sans-serif;--mono:'Space Mono',monospace;
   --t:0.18s cubic-bezier(0.4,0,0.2,1);
 }
 html,body{height:100%;overflow:hidden;background:var(--bg)}
@@ -125,13 +127,13 @@ body{font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiase
 .h1 span{color:var(--alfer)}
 .tagline{font-size:12px;color:var(--text3);margin-top:5px;font-style:italic}
 .bereiche{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 16px 0}
-.bc{position:relative;border-radius:var(--r2);overflow:hidden;cursor:pointer;aspect-ratio:3/2;transition:transform var(--t)}
+.bc{position:relative;border-radius:var(--r2);overflow:hidden;cursor:pointer;aspect-ratio:1/1.3;transition:transform var(--t)}
 .bc:active{transform:scale(0.96)}
 .bc img{width:100%;height:100%;object-fit:cover;display:block}
-.bc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,transparent 55%);padding:14px;display:flex;flex-direction:column;justify-content:flex-end}
+.bc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.3) 50%,transparent 100%);padding:14px;display:flex;flex-direction:column;justify-content:flex-end}
 .bc-acc{width:22px;height:3px;border-radius:2px;margin-bottom:7px}
-.bc-lbl{font-size:14px;font-weight:800}
-.bc-cnt{font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px}
+.bc-lbl{font-size:15px;font-weight:800}
+.bc-cnt{font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px}
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 10px;flex-shrink:0}
 .sec-t{font-size:17px;font-weight:800}
 .sec-s{font-size:11px;color:var(--text3);margin-top:2px}
@@ -175,11 +177,12 @@ body{font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiase
 @media(min-width:700px){.sg{grid-template-columns:repeat(3,1fr)}}
 .sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:all var(--t)}
 .sc:active{transform:scale(0.97)}
-.sc img{width:100%;aspect-ratio:3/2;object-fit:cover}
+.sc img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
 .sc-body{padding:12px 14px 14px}
-.sc-br{font-size:10px;font-weight:800;margin-bottom:4px;letter-spacing:0.04em}
-.sc-nm{font-size:14px;font-weight:700;line-height:1.3}
-.sc-ct{font-size:11px;color:var(--text3);margin-top:4px}
+.sc-br{font-size:11px;font-weight:800;margin-bottom:4px;letter-spacing:0.02em}
+.sc-tag{font-size:11px;color:var(--text2);margin-top:2px;font-weight:500;line-height:1.35}
+.sc-nm{font-size:13px;font-weight:600;line-height:1.3;color:var(--text);margin-top:8px}
+.sc-ct{font-size:10px;color:var(--text3);margin-top:6px;font-family:var(--mono)}
 .dh{position:relative;aspect-ratio:16/9;overflow:hidden;flex-shrink:0}
 .dh img{width:100%;height:100%;object-fit:cover}
 .dh-ov{position:absolute;bottom:0;left:0;right:0;padding:18px;background:linear-gradient(to top,rgba(0,0,0,0.92) 0%,transparent 100%)}
@@ -397,7 +400,7 @@ function SortV({products,bereich,onGo,onBack}){
   const b=STRUKTUR[bereich]; if(!b)return null;
   return(
     <div>
-      <div className="sec-hdr"><div><div className="sec-t">{bereich}</div><div className="sec-s">{Object.keys(b.brands).length} Marken</div></div><button className="bs" style={{padding:"8px 12px",fontSize:12}} onClick={onBack}>Zurück</button></div>
+      <div className="sec-hdr"><div><div className="sec-t">{bereich}</div><div className="sec-s">{Object.keys(b.brands).length} Marken · {b.untertitel||""}</div></div><button className="bs" style={{padding:"8px 12px",fontSize:12}} onClick={onBack}>Zurück</button></div>
       <div className="sg">
         {Object.entries(b.brands).map(([bid,br])=>{
           const cnt=products.filter(p=>p.brand===bid).length;
@@ -407,11 +410,11 @@ function SortV({products,bereich,onGo,onBack}){
               <img src={br.image} alt={br.label} loading="lazy"/>
               <div className="sc-body">
                 <div className="sc-br" style={{color:br.color}}>{br.label}</div>
-                <div className="sc-nm">{br.sortimente.slice(0,2).join(" · ")}</div>
+                {br.tagline&&<div className="sc-tag">{br.tagline}</div>}
                 <div className="sc-ct">{cnt} Artikel · {br.sortimente.length} Sortimente</div>
-                {brd&&<div style={{marginTop:8,display:"flex",flexWrap:"wrap",gap:4}}>
-                  {br.sortimente.slice(0,3).map(s=><span key={s} style={{fontSize:10,color:brd.color,background:brd.bg,border:`1px solid ${brd.border}`,borderRadius:99,padding:"2px 8px",fontWeight:700}}>{s}</span>)}
-                  {br.sortimente.length>3&&<span style={{fontSize:10,color:"var(--text3)"}}>+{br.sortimente.length-3}</span>}
+                {brd&&<div style={{marginTop:10,display:"flex",flexWrap:"wrap",gap:4}}>
+                  {br.sortimente.slice(0,4).map(s=><span key={s} style={{fontSize:10,color:brd.color,background:brd.bg,border:`1px solid ${brd.border}`,borderRadius:99,padding:"2px 8px",fontWeight:600}}>{s}</span>)}
+                  {br.sortimente.length>4&&<span style={{fontSize:10,color:"var(--text3)",padding:"2px 4px"}}>+{br.sortimente.length-4}</span>}
                 </div>}
               </div>
             </div>
@@ -542,7 +545,7 @@ function ImpV({fileRef,handleCSV,products,onBack}){
         <div style={{background:"var(--bg3)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
           <div style={{fontSize:12,fontWeight:800,color:"var(--alfer)",marginBottom:8}}>CSV-Format (Semikolon-getrennt)</div>
           <div style={{fontSize:11,fontFamily:"var(--mono)",color:"var(--text3)",lineHeight:1.9}}>id · name · artNr · brand · bereich<br/>sortiment · beschreibung · vorteile<br/>varianten · zielgruppe · neuheit<br/>bildUrl · anwendungUrl · tags</div>
-          <div style={{fontSize:11,color:"var(--text3)",marginTop:10}}><b style={{color:"var(--text2)"}}>brand:</b> combitech / clipstech / orditech / element / coaxis<br/><b style={{color:"var(--text2)"}}>neuheit:</b> ja / nein · <b style={{color:"var(--text2)"}}>Trennzeichen:</b> Komma bei Listen</div>
+          <div style={{fontSize:11,color:"var(--text3)",marginTop:10}}><b style={{color:"var(--text2)"}}>brand:</b> combitech / buildtech / clipstech / element / organize<br/><b style={{color:"var(--text2)"}}>neuheit:</b> ja / nein · <b style={{color:"var(--text2)"}}>Trennzeichen:</b> Komma bei Listen</div>
         </div>
       </div>
       <input ref={fileRef} type="file" accept=".csv" style={{display:"none"}} onChange={handleCSV}/>
