@@ -105,7 +105,8 @@ const css = `
 }
 html,body{height:100%;overflow:hidden;background:var(--bg)}
 body{font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiased;touch-action:manipulation}
-#root{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+#root{height:100vh;display:flex;flex-direction:column;overflow:hidden;max-width:540px;margin:0 auto;border-left:1px solid var(--border);border-right:1px solid var(--border);box-shadow:0 0 60px rgba(0,0,0,0.6)}
+@media(min-width:1100px){#root{max-width:480px}}
 .app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 .scroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
 .scroll::-webkit-scrollbar{width:3px}
