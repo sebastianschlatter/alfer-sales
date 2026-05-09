@@ -545,7 +545,7 @@ function ImpV({fileRef,handleCSV,products,onBack}){
         <div style={{background:"var(--bg3)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
           <div style={{fontSize:12,fontWeight:800,color:"var(--alfer)",marginBottom:8}}>CSV-Format (Semikolon-getrennt)</div>
           <div style={{fontSize:11,fontFamily:"var(--mono)",color:"var(--text3)",lineHeight:1.9}}>id · name · artNr · brand · bereich<br/>sortiment · beschreibung · vorteile<br/>varianten · zielgruppe · neuheit<br/>bildUrl · anwendungUrl · tags</div>
-          <div style={{fontSize:11,color:"var(--text3)",marginTop:10}}><b style={{color:"var(--text2)"}}>brand:</b> combitech / orditech / clipstech / element / organize<br/><b style={{color:"var(--text2)"}}>neuheit:</b> ja / nein · <b style={{color:"var(--text2)"}}>Trennzeichen:</b> Komma bei Listen</div>
+          <div style={{fontSize:11,color:"var(--text3)",marginTop:10}}><b style={{color:"var(--text2)"}}>brand:</b> combitech / orditech / clipstech / element / coaxis <br/><b style={{color:"var(--text2)"}}>neuheit:</b> ja / nein · <b style={{color:"var(--text2)"}}>Trennzeichen:</b> Komma bei Listen</div>
         </div>
       </div>
       <input ref={fileRef} type="file" accept=".csv" style={{display:"none"}} onChange={handleCSV}/>
