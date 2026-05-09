@@ -18,7 +18,7 @@ const BRANDS = {
 const STRUKTUR = {
   "Bauen & Renovieren": {
     color:"#FF6E00",
-    image:"/sortimente/bereich_bauen.jpg",
+    image:"/sortimente/bauen.jpg",
     untertitel:"B2B & B2C",
     brands:{
       combitech:{ label:"combitech®", tagline:"Projekt mit Profil", color:"#FF6E00", sortimente:["combitech® Profile","Connect-Verbinder","Zubehör gesamt","Logika (Logika Zub.)"], image:"/sortimente/combitech.jpg" },
@@ -28,7 +28,7 @@ const STRUKTUR = {
   },
   "Ordnungssysteme": {
     color:"#B473FF",
-    image:"/sortimente/bereich_ordnen.jpg",
+    image:"/sortimente/ordnen.jpg",
     untertitel:"B2C & B2B",
     brands:{
       element:{ label:"element system®", tagline:"Macht Platz für dein Leben", color:"#B473FF", sortimente:["Schienen & Träger","Office-Set","Pegboard","Konsolen","Möbelfüße"], image:"/sortimente/element.jpg" },
