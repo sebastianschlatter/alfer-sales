@@ -550,7 +550,7 @@ function HomeV({products,onGo,onNav,onOpenP}){
   return(
     <div>
       <div className="hero">
-        <div className="eyebrow">Digitaler Showroom · Eisenwarenmesse Köln 2026</div>
+        <div className="eyebrow">Digitaler Showroom </div>
         <div className="h1">Willkommen bei<br/><span>alfer aluminium</span></div>
         <div className="tagline">Dein Projekt verdient Profil.</div>
       </div>
