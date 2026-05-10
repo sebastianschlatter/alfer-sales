@@ -744,15 +744,15 @@ function DetV({product:p,products,saved,onTog,onBack,onCRM,onOpenArt}){
           {isHero && p.designedInGermany && (
             <div className="trust-badges">
               <div className="tb">
-                <img src="/logos/designed_by_alfer.png" alt="Designed by alfer"/>
+                <img src="/logos/designed_by_alfer.jpg" alt="Designed by alfer"/>
                 <div className="tb-label">DESIGNED<br/>by alfer®</div>
               </div>
               <div className="tb">
-                <img src="/logos/combitech_235_check.png" alt="combitech 23,5 kompatibel"/>
+                <img src="/logos/combitech_235_check.jpg" alt="combitech 23,5 kompatibel"/>
                 <div className="tb-label">23,5<br/>KOMPATIBEL</div>
               </div>
               <div className="tb">
-                <img src="/logos/farben_bw.png" alt="Schwarz und Weiß"/>
+                <img src="/logos/farben_bw.jpg" alt="Schwarz und Weiß"/>
                 <div className="tb-label">SCHWARZ<br/>& WEISS</div>
               </div>
             </div>
