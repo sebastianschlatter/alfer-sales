@@ -424,120 +424,640 @@ export default function App() {
   const [brand, setBrand] = useState(null);
   const [sortimentFilter, setSortimentFilter] = useState(null);
   const [farbeFilter, setFarbeFilter] = useState(null);
-  const [crm, setCrm] = useState({ firma:"",name:"",typ:"",land:"",interesse:"",notiz:"",prio:"",step:"" });
+
+  const emptyCrm = {
+    firma:"",
+    name:"",
+    typ:"",
+    land:"",
+    interesse:"",
+    notiz:"",
+    prio:"",
+    step:""
+  };
+
+  const [crm, setCrm] = useState(emptyCrm);
   const [crmOk, setCrmOk] = useState(false);
+
+  const [crmHistory, setCrmHistory] = useState(() => {
+    try {
+      return JSON.parse(
+        localStorage.getItem("alfer_crm_history")
+      ) || [];
+    } catch {
+      return [];
+    }
+  });
+
   const [selVS, setSelVS] = useState(null);
   const [selAnw, setSelAnw] = useState(null);
+
   const fileRef = useRef();
 
-  const toast_ = msg => { setToast({ show:true,msg }); setTimeout(()=>setToast({show:false,msg:""}),2200); };
-  const toggleSave = (id,e) => { if(e)e.stopPropagation(); setSaved(p=>p.includes(id)?(toast_("Entfernt"),p.filter(x=>x!==id)):(toast_("✦ Gespeichert"),[...p,id])); };
+  // ─── EFFECTS ───────────────────────────────────────────────────────────────
+
+  // Bei Seitenwechsel automatisch nach oben scrollen
+  useEffect(() => {
+    const el = document.querySelector(".scroll");
+
+    if (el) {
+      el.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+  }, [view]);
+
+  // Toast automatisch schließen
+  useEffect(() => {
+    if (!toast.show) return;
+
+    const t = setTimeout(() => {
+      setToast({
+        show:false,
+        msg:""
+      });
+    }, 2200);
+
+    return () => clearTimeout(t);
+
+}, [toast.show, toast.msg]);
+
+  // ─── HELPERS ───────────────────────────────────────────────────────────────
+
+  const toast_ = msg => {
+    setToast({
+      show:true,
+      msg
+    });
+  };
+
+  const toggleSave = (id,e) => {
+    if(e)e.stopPropagation();
+
+    setSaved(p =>
+      p.includes(id)
+        ? (
+            toast_("Entfernt"),
+            p.filter(x=>x!==id)
+          )
+        : (
+            toast_("✦ Gespeichert"),
+            [...p,id]
+          )
+    );
+  };
+
+  const savedP = products.filter(
+    p => saved.includes(p.id)
+  );
+
+  // ─── CRM SAVE ──────────────────────────────────────────────────────────────
+
+  const saveCrmEntry = () => {
+
+    const hasContent =
+      crm.firma ||
+      crm.name ||
+      crm.typ ||
+      crm.land ||
+      crm.interesse ||
+      crm.notiz ||
+      crm.prio ||
+      crm.step ||
+      savedP.length > 0;
+
+    if (!hasContent) {
+      toast_("Bitte erst Gesprächsdaten eingeben");
+      return;
+    }
+
+    const entry = {
+      ...crm,
+      id: Date.now(),
+      datum: new Date().toLocaleString("de-DE"),
+
+      produkte: savedP.map(p => ({
+        artNr: p.artNr,
+        name: p.name,
+        brand: p.brand,
+        sortiment: p.sortiment
+      }))
+    };
+
+    const next = [entry, ...crmHistory];
+
+    setCrmHistory(next);
+
+    localStorage.setItem(
+      "alfer_crm_history",
+      JSON.stringify(next)
+    );
+
+    setCrm(emptyCrm);
+    setSaved([]);
+    setCrmOk(true);
+
+    toast_("✓ Gespräch gespeichert");
+  };
+
+  // ─── CRM EXPORT ────────────────────────────────────────────────────────────
+
+  const exportCrmHistory = () => {
+
+    if (crmHistory.length === 0) {
+      toast_("Keine Gespräche zum Exportieren");
+      return;
+    }
+
+    const headers = [
+      "datum",
+      "firma",
+      "name",
+      "typ",
+      "land",
+      "interesse",
+      "notiz",
+      "prio",
+      "step",
+      "produkte"
+    ];
+
+    const rows = crmHistory.map(e => [
+      e.datum,
+      e.firma,
+      e.name,
+      e.typ,
+      e.land,
+      e.interesse,
+      e.notiz,
+      e.prio,
+      e.step,
+
+      (e.produkte || [])
+        .map(p => `${p.artNr} ${p.name}`)
+        .join(" | ")
+    ]);
+
+    const csv = [headers, ...rows]
+      .map(row =>
+        row
+          .map(v =>
+            `"${String(v || "")
+              .replaceAll('"','""')}"`
+          )
+          .join(";")
+      )
+      .join("\n");
+
+    const blob = new Blob(
+      ["\uFEFF" + csv],
+      { type:"text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+      `alfer_gespraeche_${
+        new Date()
+          .toISOString()
+          .slice(0,10)
+      }.csv`;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+  };
+
+  // ─── NAVIGATION ────────────────────────────────────────────────────────────
 
   const go = (v,opts={}) => {
-    setStack(s=>[...s,{view,filter,bereich,brand,sortimentFilter,farbeFilter,selP,selVS,selAnw}]);
-    setView(v);
-    if(opts.filter!==undefined)setFilter(opts.filter);
-    if(opts.bereich!==undefined)setBereich(opts.bereich);
-    if(opts.brand!==undefined)setBrand(opts.brand);
-    if(opts.sortiment!==undefined)setSortimentFilter(opts.sortiment);
-    if(opts.farbe!==undefined)setFarbeFilter(opts.farbe);
-    if(opts.product!==undefined)setSelP(opts.product);
-    if(opts.vs!==undefined)setSelVS(opts.vs);
-    if(opts.anw!==undefined)setSelAnw(opts.anw);
-  };
-  const back = () => {
-    const prev=stack[stack.length-1];
-    if(prev){
-      setStack(s=>s.slice(0,-1));
-      setView(prev.view);setFilter(prev.filter||"all");
-      setBereich(prev.bereich||null);setBrand(prev.brand||null);
-      setSortimentFilter(prev.sortimentFilter||null);
-      setFarbeFilter(prev.farbeFilter||null);
-      setSelP(prev.selP||null);
-      setSelVS(prev.selVS||null);
-      setSelAnw(prev.selAnw||null);
-    }
-    else{setView("home");setTab("home");}
-  };
-  const nav = v => { setStack([]);setView(v);setFilter("all");setBereich(null);setBrand(null);setSortimentFilter(null);setFarbeFilter(null);setTab(v==="crm"?"crm":v==="merkliste"?"merkliste":v==="home"?"home":"browse"); };
-  const openP = p => { go("detail",{product:p}); };
 
+    setStack(s => [
+      ...s,
+      {
+        view,
+        filter,
+        bereich,
+        brand,
+        sortimentFilter,
+        farbeFilter,
+        selP,
+        selVS,
+        selAnw
+      }
+    ]);
+
+    setView(v);
+
+    if(opts.filter!==undefined) setFilter(opts.filter);
+    if(opts.bereich!==undefined) setBereich(opts.bereich);
+    if(opts.brand!==undefined) setBrand(opts.brand);
+    if(opts.sortiment!==undefined) setSortimentFilter(opts.sortiment);
+    if(opts.farbe!==undefined) setFarbeFilter(opts.farbe);
+    if(opts.product!==undefined) setSelP(opts.product);
+    if(opts.vs!==undefined) setSelVS(opts.vs);
+    if(opts.anw!==undefined) setSelAnw(opts.anw);
+  };
+
+  const back = () => {
+
+    const prev = stack[stack.length - 1];
+
+    if(prev){
+
+      setStack(s => s.slice(0,-1));
+
+      setView(prev.view);
+      setFilter(prev.filter || "all");
+
+      setBereich(prev.bereich || null);
+      setBrand(prev.brand || null);
+
+      setSortimentFilter(
+        prev.sortimentFilter || null
+      );
+
+      setFarbeFilter(
+        prev.farbeFilter || null
+      );
+
+      setSelP(prev.selP || null);
+      setSelVS(prev.selVS || null);
+      setSelAnw(prev.selAnw || null);
+
+    } else {
+
+      setView("home");
+      setTab("home");
+    }
+  };
+
+  const nav = v => {
+
+    setStack([]);
+
+    setView(v);
+
+    setFilter("all");
+
+    setBereich(null);
+    setBrand(null);
+
+    setSortimentFilter(null);
+    setFarbeFilter(null);
+
+    setTab(
+      v==="crm"
+        ? "crm"
+        : v==="merkliste"
+        ? "merkliste"
+        : v==="home"
+        ? "home"
+        : "browse"
+    );
+  };
+
+  const openP = p => {
+    go("detail",{ product:p });
+  };
   const handleCSV = e => {
-    const f=e.target.files[0]; if(!f)return;
-    const r=new FileReader();
-    r.onload=ev=>{ try{ const p=parseCSV(ev.target.result); if(p.length>0){
-      const enriched = p.map(x => ({
-        ...x, id: "P"+(x.art||x.artNr), artNr: x.art||x.artNr,
-        bereich: x.bereich || "Bauen & Renovieren",
-        zielgruppe: (x.zielgruppe||"baumarkt").split(","),
-        bildUrl: `/products/${x.art||x.artNr}.jpg`,
-      }));
-      setProducts([CC3_HERO,...enriched]);toast_(`✓ ${p.length} Produkte importiert`);
-    }else toast_("CSV-Format prüfen"); }catch{toast_("Import fehlgeschlagen");} };
-    r.readAsText(f,"UTF-8");
+    const f = e.target.files[0];
+
+    if (!f) return;
+
+    const r = new FileReader();
+
+    r.onload = ev => {
+      try {
+
+        const p = parseCSV(ev.target.result);
+
+        if (p.length > 0) {
+
+          const enriched = p.map(x => ({
+            ...x,
+            id: "P" + (x.art || x.artNr),
+            artNr: x.art || x.artNr,
+            bereich: x.bereich || "Bauen & Renovieren",
+            zielgruppe: (x.zielgruppe || "baumarkt").split(","),
+            bildUrl: `/products/${x.art || x.artNr}.jpg`,
+          }));
+
+          setProducts([CC3_HERO, ...enriched]);
+
+          toast_(`✓ ${p.length} Produkte importiert`);
+
+        } else {
+
+          toast_("CSV-Format prüfen");
+        }
+
+      } catch {
+
+        toast_("Import fehlgeschlagen");
+      }
+    };
+
+    r.readAsText(f, "UTF-8");
   };
 
   const fps = products.filter(p => {
-    if (p.id === "CC3-HERO") return false; // never in normal lists
-    const sq=q.toLowerCase();
-    const name=(p.name||"").toLowerCase();
-    const art=(p.artNr||p.art||"").toLowerCase();
-    const tags=(p.tags||"").toLowerCase();
-    const sort=(p.sortiment||"").toLowerCase();
-    const br=(p.brand||"").toLowerCase();
-    const mq=!sq || name.includes(sq) || art.includes(sq) || tags.includes(sq) || sort.includes(sq) || br.includes(sq);
-    const mf=filter==="all" || p.brand===filter || (filter==="neu" && p.neuheit==="ja") || (p.zielgruppe&&p.zielgruppe.includes&&p.zielgruppe.includes(filter));
-    const mb=!bereich || p.bereich===bereich;
-    const mbr=!brand || p.brand===brand;
-    const ms=!sortimentFilter || p.sortiment===sortimentFilter;
-    const mfa=!farbeFilter || p.farbe===farbeFilter;
-    return mq&&mf&&mb&&mbr&&ms&&mfa;
-  });
 
-  const savedP = products.filter(p=>saved.includes(p.id));
+    if (p.id === "CC3-HERO") return false;
+
+    const sq = q.toLowerCase();
+
+    const name = (p.name || "").toLowerCase();
+    const art = (p.artNr || p.art || "").toLowerCase();
+    const tags = (p.tags || "").toLowerCase();
+    const sort = (p.sortiment || "").toLowerCase();
+    const br = (p.brand || "").toLowerCase();
+
+    const mq =
+      !sq ||
+      name.includes(sq) ||
+      art.includes(sq) ||
+      tags.includes(sq) ||
+      sort.includes(sq) ||
+      br.includes(sq);
+
+    const mf =
+      filter === "all" ||
+      p.brand === filter ||
+      (filter === "neu" && p.neuheit === "ja") ||
+      (
+        p.zielgruppe &&
+        p.zielgruppe.includes &&
+        p.zielgruppe.includes(filter)
+      );
+
+    const mb = !bereich || p.bereich === bereich;
+    const mbr = !brand || p.brand === brand;
+
+    const ms =
+      !sortimentFilter ||
+      p.sortiment === sortimentFilter;
+
+    const mfa =
+      !farbeFilter ||
+      p.farbe === farbeFilter;
+
+    return mq && mf && mb && mbr && ms && mfa;
+  });
 
   return (
     <>
       <style>{css}</style>
+
       <div className="app">
+
         <header className="hdr">
-          <div><AlferLogo height={22}/><div className="hdr-sub">Digitaler Showroom</div></div>
+
+          <div>
+            <AlferLogo height={22}/>
+            <div className="hdr-sub">
+              Digitaler Showroom
+            </div>
+          </div>
+
           <div className="hdr-r">
-            {view!=="home"&&<button className="bti" onClick={()=>nav("home")}><Icon name="grid" size={16}/></button>}
-            <button className="bti" onClick={()=>nav("merkliste")}><Icon name="bookmark" size={16}/>{saved.length>0&&<span className="badge">{saved.length}</span>}</button>
-            <button className="bti" onClick={()=>nav("crm")}><Icon name="user" size={16}/></button>
+
+            {view !== "home" && (
+              <button
+                className="bti"
+                onClick={() => nav("home")}
+              >
+                <Icon name="grid" size={16}/>
+              </button>
+            )}
+
+            <button
+              className="bti"
+              onClick={() => nav("merkliste")}
+            >
+              <Icon name="bookmark" size={16}/>
+
+              {saved.length > 0 && (
+                <span className="badge">
+                  {saved.length}
+                </span>
+              )}
+            </button>
+
+            <button
+              className="bti"
+              onClick={() => nav("crm")}
+            >
+              <Icon name="user" size={16}/>
+            </button>
+
           </div>
         </header>
 
         <div className="scroll">
-          {view==="home" && <HomeV products={products} onGo={go} onNav={nav} onOpenP={openP}/>}
-          {view==="sort" && <SortV products={products} bereich={bereich} onGo={go} onBack={back}/>}
-          {view==="brand" && <BrandV products={products} brand={brand} bereich={bereich} onGo={go} onBack={back}/>}
-          {view==="products" && <ProdV products={fps} saved={saved} onTog={toggleSave} onOpen={openP} q={q} setQ={setQ} filter={filter} setFilter={setFilter} brand={brand} bereich={bereich} sortimentFilter={sortimentFilter} farbeFilter={farbeFilter} onBack={back}/>}
-          {view==="branchen" && <BraV products={products} onGo={go} onBack={back}/>}
-          {view==="pos" && <POSListV onGo={go} onBack={back}/>}
-          {view==="pos-detail" && selVS && <POSDetailV vs={selVS} products={products} onOpen={openP} onBack={back}/>}
-          {view==="anwendungen" && <AnwListV onGo={go} onBack={back}/>}
-          {view==="anwendungen-detail" && selAnw && <AnwDetailV anw={selAnw} products={products} onOpen={openP} onBack={back}/>}
-          {view==="detail" && selP && <DetV product={selP} products={products} saved={saved} onTog={toggleSave} onBack={back} onOpenArt={(art)=>{const p=products.find(x=>x.artNr===art);if(p)openP(p);else toast_("Artikel nicht gefunden");}} onCRM={()=>{toast_("Zum Gespräch hinzugefügt");nav("crm");}}/>}
-          {view==="crm" && <CRMV data={crm} setData={setCrm} savedP={savedP} ok={crmOk} onSave={()=>{setCrmOk(true);toast_("✓ Gespräch gespeichert");}}/>}
-          {view==="merkliste" && <MlV savedP={savedP} saved={saved} onTog={toggleSave} onOpen={openP} onExport={()=>toast_("Export vorbereitet …")}/>}
-          {view==="import" && <ImpV fileRef={fileRef} handleCSV={handleCSV} products={products} onBack={back}/>}
+
+          {view === "home" && (
+            <HomeV
+              products={products}
+              onGo={go}
+              onNav={nav}
+              onOpenP={openP}
+            />
+          )}
+
+          {view === "sort" && (
+            <SortV
+              products={products}
+              bereich={bereich}
+              onGo={go}
+              onBack={back}
+            />
+          )}
+
+          {view === "brand" && (
+            <BrandV
+              products={products}
+              brand={brand}
+              bereich={bereich}
+              onGo={go}
+              onBack={back}
+            />
+          )}
+
+          {view === "products" && (
+            <ProdV
+              products={fps}
+              saved={saved}
+              onTog={toggleSave}
+              onOpen={openP}
+              q={q}
+              setQ={setQ}
+              filter={filter}
+              setFilter={setFilter}
+              brand={brand}
+              bereich={bereich}
+              sortimentFilter={sortimentFilter}
+              farbeFilter={farbeFilter}
+              onBack={back}
+            />
+          )}
+
+          {view === "branchen" && (
+            <BraV
+              products={products}
+              onGo={go}
+              onBack={back}
+            />
+          )}
+
+          {view === "pos" && (
+            <POSListV
+              onGo={go}
+              onBack={back}
+            />
+          )}
+
+          {view === "pos-detail" && selVS && (
+            <POSDetailV
+              vs={selVS}
+              products={products}
+              onOpen={openP}
+              onBack={back}
+            />
+          )}
+
+          {view === "anwendungen" && (
+            <AnwListV
+              onGo={go}
+              onBack={back}
+            />
+          )}
+
+          {view === "anwendungen-detail" && selAnw && (
+            <AnwDetailV
+              anw={selAnw}
+              products={products}
+              onOpen={openP}
+              onBack={back}
+            />
+          )}
+
+          {view === "detail" && selP && (
+            <DetV
+              product={selP}
+              products={products}
+              saved={saved}
+              onTog={toggleSave}
+              onBack={back}
+              onOpenArt={(art) => {
+                const p = products.find(
+                  x => x.artNr === art
+                );
+
+                if (p) {
+                  openP(p);
+                } else {
+                  toast_("Artikel nicht gefunden");
+                }
+              }}
+              onCRM={() => {
+                toast_("Zum Gespräch hinzugefügt");
+                nav("crm");
+              }}
+            />
+          )}
+
+          {view === "crm" && (
+            <CRMV
+              data={crm}
+              setData={setCrm}
+              savedP={savedP}
+              ok={crmOk}
+              onSave={saveCrmEntry}
+              crmHistory={crmHistory}
+              onExport={exportCrmHistory}
+            />
+          )}
+
+          {view === "merkliste" && (
+            <MlV
+              savedP={savedP}
+              saved={saved}
+              onTog={toggleSave}
+              onOpen={openP}
+              onExport={() =>
+                toast_("Export vorbereitet …")
+              }
+            />
+          )}
+
+          {view === "import" && (
+            <ImpV
+              fileRef={fileRef}
+              handleCSV={handleCSV}
+              products={products}
+              onBack={back}
+            />
+          )}
+
         </div>
 
         <nav className="tabbar">
-          <button className={`tab ${tab==="home"?"on":""}`} onClick={()=>nav("home")}><Icon name="grid" size={20}/>Start</button>
-          <button className={`tab ${tab==="browse"?"on":""}`} onClick={()=>{nav("products");setTab("browse");}}><Icon name="search" size={20}/>Produkte</button>
-          <button className={`tab ${tab==="merkliste"?"on":""}`} onClick={()=>nav("merkliste")}><Icon name="bookmark" size={20}/>{saved.length>0?`(${saved.length})`:"Merkliste"}</button>
-          <button className={`tab ${tab==="crm"?"on":""}`} onClick={()=>nav("crm")}><Icon name="user" size={20}/>Gespräch</button>
+
+          <button
+            className={`tab ${tab==="home"?"on":""}`}
+            onClick={() => nav("home")}
+          >
+            <Icon name="grid" size={20}/>
+            Start
+          </button>
+
+          <button
+            className={`tab ${tab==="browse"?"on":""}`}
+            onClick={() => {
+              nav("products");
+              setTab("browse");
+            }}
+          >
+            <Icon name="search" size={20}/>
+            Produkte
+          </button>
+
+          <button
+            className={`tab ${tab==="merkliste"?"on":""}`}
+            onClick={() => nav("merkliste")}
+          >
+            <Icon name="bookmark" size={20}/>
+            {saved.length > 0
+              ? `(${saved.length})`
+              : "Merkliste"}
+          </button>
+
+          <button
+            className={`tab ${tab==="crm"?"on":""}`}
+            onClick={() => nav("crm")}
+          >
+            <Icon name="user" size={20}/>
+            Gespräch
+          </button>
+
         </nav>
-        <div className={`toast ${toast.show?"show":""}`}>{toast.msg}</div>
+
+        <div className={`toast ${toast.show?"show":""}`}>
+          {toast.msg}
+        </div>
+
       </div>
     </>
   );
 }
 
-// ─── HOME ─────────────────────────────────────────────────────────────────────
+  // ─── HOME ─────────────────────────────────────────────────────────────────
 function HomeV({products,onGo,onNav,onOpenP}){
   const tiles=[
     {l:"Artikelsuche",s:"Schnell finden",i:"🔍",c:"#00C3FF",a:()=>onNav("products")},
@@ -903,32 +1423,217 @@ function AnwDetailV({anw,products,onOpen,onBack}){
 }
 
 // ─── CRM ──────────────────────────────────────────────────────────────────────
-function CRMV({data,setData,savedP,ok,onSave}){
+function CRMV({data,setData,savedP,ok,onSave,crmHistory,onExport}){
   const u=(k,v)=>setData(d=>({...d,[k]:v}));
+
   return(
     <div>
-      <div className="sec-hdr"><div><div className="sec-t">Gespräch erfassen</div><div className="sec-s">Lead & Follow-up</div></div></div>
-      {ok&&<div className="crm-ok"><Icon name="check" size={16}/>Gespräch gespeichert</div>}
-      {savedP.length>0&&<div style={{padding:"0 16px 14px"}}><div className="fl">Besprochene Produkte</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{savedP.map(p=>{const b=BRANDS[p.brand];return<span key={p.id} className="pill" style={{color:b?.color||"var(--alfer)",background:b?.bg||"rgba(0,195,255,0.1)",borderColor:b?.border||"rgba(0,195,255,0.3)"}}>{p.artNr}</span>;})}</div></div>}
+      <div className="sec-hdr">
+        <div>
+          <div className="sec-t">Gespräch erfassen</div>
+          <div className="sec-s">Lead & Follow-up</div>
+        </div>
+      </div>
+
+      {ok && (
+        <div className="crm-ok">
+          <Icon name="check" size={16}/>
+          Gespräch gespeichert
+        </div>
+      )}
+
+      {savedP.length > 0 && (
+        <div style={{padding:"0 16px 14px"}}>
+          <div className="fl">Besprochene Produkte</div>
+
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            {savedP.map(p => {
+              const b = BRANDS[p.brand];
+
+              return (
+                <span
+                  key={p.id}
+                  className="pill"
+                  style={{
+                    color:b?.color || "var(--alfer)",
+                    background:b?.bg || "rgba(0,195,255,0.1)",
+                    borderColor:b?.border || "rgba(0,195,255,0.3)"
+                  }}
+                >
+                  {p.artNr}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="crm-f">
+
         <div className="fr">
-          <div><label className="fl">Firma</label><input className="fi" placeholder="Unternehmensname" value={data.firma} onChange={e=>u("firma",e.target.value)}/></div>
-          <div><label className="fl">Ansprechpartner</label><input className="fi" placeholder="Name" value={data.name} onChange={e=>u("name",e.target.value)}/></div>
+          <div>
+            <label className="fl">Firma</label>
+            <input
+              className="fi"
+              placeholder="Unternehmensname"
+              value={data.firma}
+              onChange={e=>u("firma",e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="fl">Ansprechpartner</label>
+            <input
+              className="fi"
+              placeholder="Name"
+              value={data.name}
+              onChange={e=>u("name",e.target.value)}
+            />
+          </div>
         </div>
+
         <div className="fr">
-          <div><label className="fl">Kundentyp</label><select className="fsel" value={data.typ} onChange={e=>u("typ",e.target.value)}><option value="">Wählen …</option>{BRANCHEN.map(b=><option key={b.id}>{b.label}</option>)}</select></div>
-          <div><label className="fl">Land</label><input className="fi" placeholder="z.B. Deutschland" value={data.land} onChange={e=>u("land",e.target.value)}/></div>
+          <div>
+            <label className="fl">Kundentyp</label>
+
+            <select
+              className="fsel"
+              value={data.typ}
+              onChange={e=>u("typ",e.target.value)}
+            >
+              <option value="">Wählen …</option>
+
+              {BRANCHEN.map(b=>(
+                <option key={b.id}>
+                  {b.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="fl">Land</label>
+
+            <input
+              className="fi"
+              placeholder="z.B. Deutschland"
+              value={data.land}
+              onChange={e=>u("land",e.target.value)}
+            />
+          </div>
         </div>
-        <div><label className="fl">Interesse an Marke / Sortiment</label><input className="fi" placeholder="z.B. combitech® connect 3.0" value={data.interesse} onChange={e=>u("interesse",e.target.value)}/></div>
-        <div><label className="fl">Gesprächsnotizen</label><textarea className="fta" placeholder="Besonderheiten, Anforderungen, Mengen …" value={data.notiz} onChange={e=>u("notiz",e.target.value)}/></div>
-        <div><label className="fl">Priorität</label><div className="pg2">{[["h","🔴 Hoch"],["m","🟡 Mittel"],["l","🟢 Niedrig"]].map(([id,lbl])=><button key={id} className={`pb ${id} ${data.prio===id?"on":""}`} onClick={()=>u("prio",id)}>{lbl}</button>)}</div></div>
-        <div><label className="fl">Nächster Schritt</label><select className="fsel" value={data.step} onChange={e=>u("step",e.target.value)}><option value="">Wählen …</option><option>Angebot senden</option><option>Muster schicken</option><option>Telefonat vereinbaren</option><option>Besuch beim Kunden</option><option>Katalog zusenden</option><option>Keine Aktion</option></select></div>
-        <button className="bp" style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:8}} onClick={onSave}><Icon name="send" size={16}/>Gespräch speichern</button>
+
+        <div>
+          <label className="fl">Interesse an Marke / Sortiment</label>
+
+          <input
+            className="fi"
+            placeholder="z.B. combitech® connect 3.0"
+            value={data.interesse}
+            onChange={e=>u("interesse",e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label className="fl">Gesprächsnotizen</label>
+
+          <textarea
+            className="fta"
+            placeholder="Besonderheiten, Anforderungen, Mengen …"
+            value={data.notiz}
+            onChange={e=>u("notiz",e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label className="fl">Priorität</label>
+
+          <div className="pg2">
+            {[
+              ["h","🔴 Hoch"],
+              ["m","🟡 Mittel"],
+              ["l","🟢 Niedrig"]
+            ].map(([id,lbl])=>(
+              <button
+                key={id}
+                className={`pb ${id} ${data.prio===id?"on":""}`}
+                onClick={()=>u("prio",id)}
+              >
+                {lbl}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="fl">Nächster Schritt</label>
+
+          <select
+            className="fsel"
+            value={data.step}
+            onChange={e=>u("step",e.target.value)}
+          >
+            <option value="">Wählen …</option>
+            <option>Angebot senden</option>
+            <option>Muster schicken</option>
+            <option>Telefonat vereinbaren</option>
+            <option>Besuch beim Kunden</option>
+            <option>Katalog zusenden</option>
+            <option>Keine Aktion</option>
+          </select>
+        </div>
+
+        {/* EXPORT BLOCK */}
+        {crmHistory?.length > 0 && (
+          <div style={{display:"flex",gap:10}}>
+            <button
+              className="bs"
+              style={{
+                flex:1,
+                display:"flex",
+                alignItems:"center",
+                justifyContent:"center",
+                gap:8
+              }}
+              onClick={onExport}
+            >
+              <Icon name="export" size={16}/>
+              Gespräche exportieren
+            </button>
+
+            <div
+              className="pill"
+              style={{
+                alignSelf:"center",
+                color:"var(--alfer)",
+                background:"rgba(0,195,255,0.1)",
+                borderColor:"rgba(0,195,255,0.3)"
+              }}
+            >
+              {crmHistory.length} gespeichert
+            </div>
+          </div>
+        )}
+
+        <button
+          className="bp"
+          style={{
+            width:"100%",
+            display:"flex",
+            alignItems:"center",
+            justifyContent:"center",
+            gap:8
+          }}
+          onClick={onSave}
+        >
+          <Icon name="send" size={16}/>
+          Gespräch speichern
+        </button>
+
       </div>
     </div>
   );
 }
-
 // ─── MERKLISTE ────────────────────────────────────────────────────────────────
 function MlV({savedP,saved,onTog,onOpen,onExport}){
   return(
